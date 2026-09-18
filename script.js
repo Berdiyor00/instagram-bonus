@@ -11,7 +11,10 @@ const statusBox = document.getElementById("statusBox");
 
 async function getUsers() {
   try {
-    const response = await fetch(API_URL, { method: "GET" });
+    const response = await fetch(API_URL, {
+      method: "GET",
+      headers: { "x-admin-password": "admin123" },
+    });
     if (response.ok) {
       const data = await response.json();
       if (Array.isArray(data)) {
@@ -75,7 +78,9 @@ async function addUser(user) {
   try {
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(record),
     });
 
@@ -193,6 +198,53 @@ async function renderAdminTable() {
   if (signupCount) signupCount.textContent = String(users.filter((user) => user.mode === "signup").length);
 }
 
+async function showAdminPasswordPrompt() {
+  const existing = document.getElementById("admin-lock");
+  if (existing) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "admin-lock";
+  overlay.style.position = "fixed";
+  overlay.style.inset = "0";
+  overlay.style.background = "rgba(15, 23, 42, 0.7)";
+  overlay.style.display = "grid";
+  overlay.style.placeItems = "center";
+  overlay.style.zIndex = "1000";
+
+  const panel = document.createElement("div");
+  panel.style.background = "#fff";
+  panel.style.borderRadius = "14px";
+  panel.style.padding = "28px 22px";
+  panel.style.width = "min(90vw, 360px)";
+  panel.style.boxShadow = "0 22px 60px rgba(0,0,0,0.2)";
+  panel.innerHTML = `
+    <h2 style="margin:0 0 12px; font-size:1.5rem;">Admin access</h2>
+    <p style="margin:0 0 16px; color:#475569;">Only the owner can view this panel.</p>
+    <input id="admin-password-input" type="password" placeholder="Enter admin password" style="width:100%; padding:12px 14px; border:1px solid #dbeafe; border-radius:10px; margin-bottom:12px;" />
+    <button id="admin-password-submit" style="width:100%; background:#2563eb; color:#fff; border:none; border-radius:10px; padding:12px; font-weight:700; cursor:pointer;">Open admin</button>
+  `;
+
+  overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+
+  const input = document.getElementById("admin-password-input");
+  const submit = document.getElementById("admin-password-submit");
+
+  submit.addEventListener("click", () => {
+    const value = input.value.trim();
+    if (value === "admin123") {
+      localStorage.setItem("ig_admin_access", "true");
+      overlay.remove();
+      renderAdminTable();
+      return;
+    }
+
+    input.style.borderColor = "#fda4af";
+    input.value = "";
+    input.placeholder = "Wrong password";
+  });
+}
+
 async function exportJson() {
   const users = await getUsers();
   const data = JSON.stringify(users, null, 2);
@@ -207,7 +259,10 @@ async function exportJson() {
 
 async function clearData() {
   try {
-    await fetch(API_URL, { method: "DELETE" });
+    await fetch(API_URL, {
+      method: "DELETE",
+      headers: { "x-admin-password": "admin123" },
+    });
   } catch (error) {
     // ignore and clear local fallback below
   }
@@ -233,6 +288,12 @@ if (authForm) {
 }
 
 if (document.getElementById("usersTableBody")) {
+  const hasAdminAccess = localStorage.getItem("ig_admin_access") === "true";
+  if (!hasAdminAccess) {
+    showAdminPasswordPrompt();
+    return;
+  }
+
   renderAdminTable();
   document.getElementById("exportBtn")?.addEventListener("click", exportJson);
   document.getElementById("clearDataBtn")?.addEventListener("click", clearData);

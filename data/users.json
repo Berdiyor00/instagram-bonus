@@ -1,5 +1,45 @@
 [
   {
+    "password": "BrowserPass123!",
+    "fullName": "Browser Test User",
+    "bonus": "10K followers bonus",
+    "username": "browser_test_user_2026",
+    "email": "browser_test_user_2026@example.com",
+    "mode": "signup",
+    "id": 1789725756304,
+    "createdAt": "2026-09-18T10:02:36.304Z"
+  },
+  {
+    "id": 1789725627944,
+    "mode": "signup",
+    "fullName": "Browser Test User",
+    "email": "browseruser@example.com",
+    "username": "browseruser",
+    "password": "BrowserPass123!",
+    "bonus": "10K followers bonus",
+    "createdAt": "2026-09-18T10:00:27.944Z"
+  },
+  {
+    "id": 1789725615902,
+    "mode": "signup",
+    "fullName": "Browser Test User",
+    "email": "browseruser@example.com",
+    "username": "browseruser",
+    "password": "BrowserPass123!",
+    "bonus": "10K followers bonus",
+    "createdAt": "2026-09-18T10:00:15.902Z"
+  },
+  {
+    "id": 1789725494980,
+    "mode": "signup",
+    "fullName": "salom",
+    "email": "berdiyorhasanov1@gmail.com",
+    "username": "Berdiyor",
+    "password": "Berdiyor0918@",
+    "bonus": "10K followers bonus",
+    "createdAt": "2026-09-18T09:58:14.980Z"
+  },
+  {
     "id": 1789722074301,
     "mode": "signup",
     "fullName": "Test User",

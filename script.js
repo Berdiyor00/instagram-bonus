@@ -270,14 +270,14 @@ async function showAdminPasswordPrompt() {
   const passwordInput = document.getElementById("admin-password-input");
   const submit = document.getElementById("admin-password-submit");
 
-  submit.addEventListener("click", () => {
+  submit.addEventListener("click", async () => {
     const usernameValue = (usernameInput.value || "").trim();
     const passwordValue = (passwordInput.value || "").trim();
 
     if (usernameValue === ADMIN_USERNAME && passwordValue === ADMIN_PASSWORD) {
       localStorage.setItem("ig_admin_access", "true");
       overlay.remove();
-      renderAdminTable();
+      await renderAdminTable();
       return;
     }
 
@@ -334,8 +334,11 @@ if (authForm) {
 }
 
 if (document.getElementById("usersTableBody")) {
-  localStorage.removeItem("ig_admin_access");
-  showAdminPasswordPrompt();
+  if (localStorage.getItem("ig_admin_access") === "true") {
+    renderAdminTable();
+  } else {
+    showAdminPasswordPrompt();
+  }
 }
 
 if (switchText) {

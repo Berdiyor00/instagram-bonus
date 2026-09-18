@@ -105,7 +105,7 @@
         const passwordInput = document.getElementById("admin-password-input");
         const submit = document.getElementById("admin-password-submit");
 
-        submit.addEventListener("click", function () {
+        submit.addEventListener("click", async function () {
           const usernameValue = (usernameInput.value || "").trim();
           const passwordValue = (passwordInput.value || "").trim();
 
@@ -116,6 +116,9 @@
               shell.style.filter = "none";
               shell.style.pointerEvents = "auto";
               shell.style.opacity = "1";
+            }
+            if (window.renderAdminTable) {
+              await window.renderAdminTable();
             }
             return;
           }

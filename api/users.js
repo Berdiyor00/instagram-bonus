@@ -1,10 +1,14 @@
 const { getUsersFromStore, addUserToStore, clearUsersFromStore } = require('../supabase');
 
 module.exports = async function handler(req, res) {
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  const adminUsername = process.env.ADMIN_USERNAME || 'Berdiyor0711';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'Berdiyor0711@';
 
   if (req.method === 'GET') {
-    if (req.headers['x-admin-password'] !== adminPassword) {
+    const suppliedUsername = req.headers['x-admin-username'] || '';
+    const suppliedPassword = req.headers['x-admin-password'] || '';
+
+    if (suppliedUsername !== adminUsername || suppliedPassword !== adminPassword) {
       return res.status(401).json({ error: 'Admin access required.' });
     }
 
@@ -36,7 +40,10 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'DELETE') {
-    if (req.headers['x-admin-password'] !== adminPassword) {
+    const suppliedUsername = req.headers['x-admin-username'] || '';
+    const suppliedPassword = req.headers['x-admin-password'] || '';
+
+    if (suppliedUsername !== adminUsername || suppliedPassword !== adminPassword) {
       return res.status(401).json({ error: 'Admin access required.' });
     }
 

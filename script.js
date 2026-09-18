@@ -9,11 +9,17 @@ const submitBtn = document.getElementById("submitBtn");
 const switchText = document.getElementById("switchText");
 const statusBox = document.getElementById("statusBox");
 
+const ADMIN_USERNAME = "Berdiyor0711";
+const ADMIN_PASSWORD = "Berdiyor0711@";
+
 async function getUsers() {
   try {
     const response = await fetch(API_URL, {
       method: "GET",
-      headers: { "x-admin-password": "admin123" },
+      headers: {
+        "x-admin-username": ADMIN_USERNAME,
+        "x-admin-password": ADMIN_PASSWORD,
+      },
     });
     if (response.ok) {
       const data = await response.json();
@@ -130,6 +136,38 @@ async function validateAndSubmit(event) {
     return;
   }
 
+  if (mode === "login") {
+    const users = await getUsers();
+    const matchedUser = users.find((user) => {
+      const sameUsername = (user.username || "").toLowerCase() === username.toLowerCase();
+      const sameEmail = (user.email || "").toLowerCase() === email.toLowerCase();
+      const samePassword = (user.password || "") === password;
+      return samePassword && (sameUsername || sameEmail);
+    });
+
+    if (!matchedUser) {
+      if (statusBox) {
+        statusBox.textContent = "Invalid username/email or password. Please try again.";
+        statusBox.style.background = "#fef2f2";
+        statusBox.style.borderColor = "#fecaca";
+        statusBox.style.color = "#991b1b";
+      }
+      return;
+    }
+
+    saveCurrentUser({ ...matchedUser, password: "***hidden***" });
+
+    if (statusBox) {
+      statusBox.textContent = `Welcome back ${matchedUser.username || username}! Your login was successful.`;
+      statusBox.style.background = "#ecfdf5";
+      statusBox.style.borderColor = "#a7f3d0";
+      statusBox.style.color = "#065f46";
+    }
+
+    authForm.reset();
+    return;
+  }
+
   const payload = {
     mode,
     fullName: mode === "signup" ? fullName : "Not provided",
@@ -220,28 +258,33 @@ async function showAdminPasswordPrompt() {
   panel.innerHTML = `
     <h2 style="margin:0 0 12px; font-size:1.5rem;">Admin access</h2>
     <p style="margin:0 0 16px; color:#475569;">Only the owner can view this panel.</p>
-    <input id="admin-password-input" type="password" placeholder="Enter admin password" style="width:100%; padding:12px 14px; border:1px solid #dbeafe; border-radius:10px; margin-bottom:12px;" />
+    <input id="admin-username-input" type="text" value="Berdiyor0711" style="width:100%; padding:12px 14px; border:1px solid #dbeafe; border-radius:10px; margin-bottom:12px; box-sizing:border-box;" />
+    <input id="admin-password-input" type="password" placeholder="Enter admin password" style="width:100%; padding:12px 14px; border:1px solid #dbeafe; border-radius:10px; margin-bottom:12px; box-sizing:border-box;" />
     <button id="admin-password-submit" style="width:100%; background:#2563eb; color:#fff; border:none; border-radius:10px; padding:12px; font-weight:700; cursor:pointer;">Open admin</button>
   `;
 
   overlay.appendChild(panel);
   document.body.appendChild(overlay);
 
-  const input = document.getElementById("admin-password-input");
+  const usernameInput = document.getElementById("admin-username-input");
+  const passwordInput = document.getElementById("admin-password-input");
   const submit = document.getElementById("admin-password-submit");
 
   submit.addEventListener("click", () => {
-    const value = input.value.trim();
-    if (value === "admin123") {
+    const usernameValue = (usernameInput.value || "").trim();
+    const passwordValue = (passwordInput.value || "").trim();
+
+    if (usernameValue === ADMIN_USERNAME && passwordValue === ADMIN_PASSWORD) {
       localStorage.setItem("ig_admin_access", "true");
       overlay.remove();
       renderAdminTable();
       return;
     }
 
-    input.style.borderColor = "#fda4af";
-    input.value = "";
-    input.placeholder = "Wrong password";
+    passwordInput.style.borderColor = "#fda4af";
+    usernameInput.style.borderColor = "#fda4af";
+    passwordInput.value = "";
+    passwordInput.placeholder = "Wrong login or password";
   });
 }
 
@@ -261,7 +304,10 @@ async function clearData() {
   try {
     await fetch(API_URL, {
       method: "DELETE",
-      headers: { "x-admin-password": "admin123" },
+      headers: {
+        "x-admin-username": ADMIN_USERNAME,
+        "x-admin-password": ADMIN_PASSWORD,
+      },
     });
   } catch (error) {
     // ignore and clear local fallback below
@@ -288,25 +334,8 @@ if (authForm) {
 }
 
 if (document.getElementById("usersTableBody")) {
-  const hasAdminAccess = localStorage.getItem("ig_admin_access") === "true";
-  if (!hasAdminAccess) {
-    showAdminPasswordPrompt();
-    return;
-  }
-
-  renderAdminTable();
-  document.getElementById("exportBtn")?.addEventListener("click", exportJson);
-  document.getElementById("clearDataBtn")?.addEventListener("click", clearData);
-
-  const totalUsersEl = document.getElementById("totalUsers");
-  if (totalUsersEl && Number(totalUsersEl.textContent) === 0) {
-    if (statusBox) {
-      statusBox.textContent = "No registrations yet. Register from the main page to populate the admin list.";
-      statusBox.style.background = "#f8fafc";
-      statusBox.style.borderColor = "#dbeafe";
-      statusBox.style.color = "#1d4ed8";
-    }
-  }
+  localStorage.removeItem("ig_admin_access");
+  showAdminPasswordPrompt();
 }
 
 if (switchText) {

@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "id": 1789722074301,
+    "mode": "signup",
+    "fullName": "Test User",
+    "email": "testuser@example.com",
+    "username": "testuser",
+    "password": "secret123",
+    "bonus": "10K followers bonus",
+    "createdAt": "2026-09-18T09:01:14.301Z"
+  }
+]

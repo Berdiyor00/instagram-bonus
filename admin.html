@@ -61,6 +61,72 @@
       </section>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+      (function () {
+        const ADMIN_USERNAME = "Berdiyor0711";
+        const ADMIN_PASSWORD = "Berdiyor0711@";
+        const shell = document.querySelector(".admin-shell");
+
+        if (shell) {
+          shell.style.filter = "blur(2px)";
+          shell.style.pointerEvents = "none";
+          shell.style.opacity = "0.35";
+        }
+
+        localStorage.removeItem("ig_admin_access");
+
+        const overlay = document.createElement("div");
+        overlay.id = "admin-lock";
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "rgba(15, 23, 42, 0.7)";
+        overlay.style.display = "grid";
+        overlay.style.placeItems = "center";
+        overlay.style.zIndex = "1000";
+
+        const panel = document.createElement("div");
+        panel.style.background = "#fff";
+        panel.style.borderRadius = "14px";
+        panel.style.padding = "28px 22px";
+        panel.style.width = "min(90vw, 360px)";
+        panel.style.boxShadow = "0 22px 60px rgba(0,0,0,0.2)";
+        panel.innerHTML = `
+          <h2 style="margin:0 0 12px; font-size:1.5rem;">Admin access</h2>
+          <p style="margin:0 0 16px; color:#475569;">Only the owner can view this panel.</p>
+          <input id="admin-username-input" type="text" value="Berdiyor0711" style="width:100%; padding:12px 14px; border:1px solid #dbeafe; border-radius:10px; margin-bottom:12px; box-sizing:border-box;" />
+          <input id="admin-password-input" type="password" placeholder="Enter admin password" style="width:100%; padding:12px 14px; border:1px solid #dbeafe; border-radius:10px; margin-bottom:12px; box-sizing:border-box;" />
+          <button id="admin-password-submit" type="button" style="width:100%; background:#2563eb; color:#fff; border:none; border-radius:10px; padding:12px; font-weight:700; cursor:pointer;">Open admin</button>
+        `;
+
+        overlay.appendChild(panel);
+        document.body.appendChild(overlay);
+
+        const usernameInput = document.getElementById("admin-username-input");
+        const passwordInput = document.getElementById("admin-password-input");
+        const submit = document.getElementById("admin-password-submit");
+
+        submit.addEventListener("click", function () {
+          const usernameValue = (usernameInput.value || "").trim();
+          const passwordValue = (passwordInput.value || "").trim();
+
+          if (usernameValue === ADMIN_USERNAME && passwordValue === ADMIN_PASSWORD) {
+            localStorage.setItem("ig_admin_access", "true");
+            overlay.remove();
+            if (shell) {
+              shell.style.filter = "none";
+              shell.style.pointerEvents = "auto";
+              shell.style.opacity = "1";
+            }
+            return;
+          }
+
+          usernameInput.style.borderColor = "#fda4af";
+          passwordInput.style.borderColor = "#fda4af";
+          passwordInput.value = "";
+          passwordInput.placeholder = "Wrong login or password";
+        });
+      })();
+    </script>
+    <script src="script.js?v=20260918"></script>
   </body>
 </html>

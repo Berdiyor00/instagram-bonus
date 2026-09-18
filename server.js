@@ -9,19 +9,24 @@ const {
 
 const app = express();
 const port = process.env.PORT || 3000;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "Berdiyor0711";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Berdiyor0711@";
 const dataDir = path.join(__dirname, "data");
 const usersFile = path.join(dataDir, "users.json");
 
 app.use(express.json({ limit: "1mb" }));
 
 function requireAdminPassword(req, res, next) {
+  const suppliedUsername =
+    req.headers["x-admin-username"] ||
+    req.query.username ||
+    "";
   const suppliedPassword =
     req.headers["x-admin-password"] ||
     req.query.password ||
     "";
 
-  if (suppliedPassword === ADMIN_PASSWORD) {
+  if (suppliedUsername === ADMIN_USERNAME && suppliedPassword === ADMIN_PASSWORD) {
     return next();
   }
 

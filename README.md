@@ -5,26 +5,27 @@ This is a lightweight static website inspired by Instagram registration flow.
 ## Features
 - Registration and login mock UI based on Instagram style
 - Bonus claim form with 10K followers campaign text
-- Data saved to browser localStorage for persistence in the same browser/device
+- Shared backend storage for cross-device registration visibility
+- Browser localStorage fallback for same-browser persistence
 - Simple admin page to view records and export JSON
-- Works on Vercel as a static site
+- Works locally with a small Node server
 
 ## Run locally
-Open the project folder and start a static server:
+Install dependencies and start the server:
 
 ```bash
-python -m http.server 8000
+npm install
+node server.js
 ```
 
 Then open:
-- http://localhost:8000
-- http://localhost:8000/admin.html
+- http://localhost:3000
+- http://localhost:3000/admin
 
-## Deploy to Vercel
-1. Push the project to your GitHub repository.
-2. Import the repo in Vercel.
-3. Use the default settings for a static site.
-4. Deploy.
+## Deploy to a public host
+This project is designed to work when the data is served by a single shared backend. Static Vercel hosting alone cannot keep shared data between different devices because browser localStorage is private to each browser.
+
+Use a host with Node support such as Render, Railway, or a Vercel serverless function with a real database.
 
 ## Important note
-LocalStorage is stored in the browser, so it stays on the same browser/device. It does not sync across different users/devices automatically. For true multi-user sharing, a backend database and server are required.
+For true multi-user admin visibility from different phones/computers, a shared backend or database is required. This app uses a shared JSON API when running from a server, and falls back to localStorage when no server is available.

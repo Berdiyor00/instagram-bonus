@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instagram Bonus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="phone-scene" aria-hidden="true">
+        <div class="phone-frame">
+          <div class="screen-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="story-bar">
+            <div class="story story-1"></div>
+            <div class="story story-2"></div>
+            <div class="story story-3"></div>
+            <div class="story story-4"></div>
+          </div>
+          <div class="post-card">
+            <div class="post-top">
+              <div class="avatar"></div>
+              <div>
+                <strong>bonus.app</strong>
+                <small>10k followers</small>
+              </div>
+            </div>
+            <div class="post-image"></div>
+            <div class="post-actions">
+              <span>♡</span>
+              <span>💬</span>
+              <span>✈</span>
+            </div>
+            <div class="caption">
+              <strong>bonus.app</strong>
+              <span>Win 10k followers bonus for active creators</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main class="auth-panel">
+        <section class="card auth-card">
+          <div class="logo">Instagram</div>
+
+          <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="signup">Sign up</button>
+            <button class="mode-btn" data-mode="login">Log in</button>
+          </div>
+
+          <form id="authForm" class="auth-form">
+            <div class="field-group hidden" id="fullNameGroup">
+              <label for="fullName">Full Name</label>
+              <input id="fullName" name="fullName" type="text" placeholder="John Smith" />
+            </div>
+
+            <div class="field-group">
+              <label for="email">Email or Phone</label>
+              <input id="email" name="email" type="text" placeholder="username@example.com" required />
+            </div>
+
+            <div class="field-group">
+              <label for="username">Username</label>
+              <input id="username" name="username" type="text" placeholder="bonus_user" required />
+            </div>
+
+            <div class="field-group">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" placeholder="Password" required />
+            </div>
+
+            <button type="submit" class="cta-btn" id="submitBtn">Create account</button>
+          </form>
+
+          <div class="divider"><span>OR</span></div>
+
+          <button class="social-btn" type="button">Continue with Facebook</button>
+
+          <p class="terms">
+            By signing up, you agree to our Terms, Privacy Policy and Cookies Policy.
+          </p>
+        </section>
+
+        <section class="card small-card">
+          <p>Have an account? <a href="#" id="switchText">Log in</a></p>
+        </section>
+
+        <section class="info-card">
+          <h2>10K Bonus Campaign</h2>
+          <p>Complete your Instagram registration to receive a bonus after the first successful profile update.</p>
+          <ul>
+            <li>10K followers target</li>
+            <li>Fast verification</li>
+            <li>Admin dashboard overview</li>
+          </ul>
+          <div class="status-box" id="statusBox" aria-live="polite">
+            Ready to claim your bonus.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

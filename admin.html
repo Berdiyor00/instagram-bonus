@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instagram Bonus Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="admin-body">
+    <div class="admin-shell">
+      <header class="admin-header">
+        <div>
+          <p class="eyebrow">Admin dashboard</p>
+          <h1>Instagram Bonus Leads</h1>
+        </div>
+        <div class="admin-actions">
+          <a class="secondary-link" href="index.html">Back to site</a>
+          <button class="danger-btn" id="clearDataBtn" type="button">Clear local data</button>
+        </div>
+      </header>
+
+      <section class="stats-grid">
+        <div class="stat-box">
+          <span>Total users</span>
+          <strong id="totalUsers">0</strong>
+        </div>
+        <div class="stat-box">
+          <span>Logins</span>
+          <strong id="loginCount">0</strong>
+        </div>
+        <div class="stat-box">
+          <span>Registrations</span>
+          <strong id="signupCount">0</strong>
+        </div>
+      </section>
+
+      <section class="table-card">
+        <div class="table-header">
+          <h2>Stored registrations</h2>
+          <button class="secondary-btn" id="exportBtn" type="button">Export JSON</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Type</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -321,6 +321,17 @@ input {
   font-size: 0.96rem;
 }
 
+.admin-shortcut {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.admin-link {
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: 700;
+}
+
 .small-card a {
   color: var(--blue);
   text-decoration: none;

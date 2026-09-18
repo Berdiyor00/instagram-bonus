@@ -199,6 +199,16 @@ if (document.getElementById("usersTableBody")) {
   renderAdminTable();
   document.getElementById("exportBtn")?.addEventListener("click", exportJson);
   document.getElementById("clearDataBtn")?.addEventListener("click", clearData);
+
+  const totalUsersEl = document.getElementById("totalUsers");
+  if (totalUsersEl && Number(totalUsersEl.textContent) === 0) {
+    if (statusBox) {
+      statusBox.textContent = "No registrations yet. Register from the main page to populate the admin list.";
+      statusBox.style.background = "#f8fafc";
+      statusBox.style.borderColor = "#dbeafe";
+      statusBox.style.color = "#1d4ed8";
+    }
+  }
 }
 
 if (switchText) {
